@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signIn, signUp } from "../libs/auth/authService";
+import { Input, PasswordField, View } from "@aws-amplify/ui-react";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -53,9 +54,8 @@ const LoginPage = () => {
         {isSignUp ? "Sign up to create an account" : "Sign in to your account"}
       </h4>
       <form onSubmit={isSignUp ? handleSignUp : handleSignIn}>
-        <div>
-          <input
-            className="inputText"
+        <View padding="0.5rem">
+          <Input
             id="email"
             type="email"
             value={email}
@@ -63,30 +63,30 @@ const LoginPage = () => {
             placeholder="Email"
             required
           />
-        </div>
-        <div>
-          <input
-            className="inputText"
+        </View>
+        <View padding="0.5rem">
+          <PasswordField
             id="password"
-            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            required
+            label="Password"
+            labelHidden={true}
+            isRequired={true}
           />
-        </div>
+        </View>
         {isSignUp && (
-          <div>
-            <input
-              className="inputText"
+          <View padding="0.5rem">
+            <PasswordField
               id="confirmPassword"
-              type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm Password"
-              required
+              label="Confirm Password"
+              labelHidden={true}
+              isRequired={true}
             />
-          </div>
+          </View>
         )}
         <button type="submit">{isSignUp ? "Sign Up" : "Sign In"}</button>
       </form>
