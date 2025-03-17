@@ -3,4 +3,5 @@ export type Member = {
   name: string
   email: string
   image_url: string
+  role: string
 }
