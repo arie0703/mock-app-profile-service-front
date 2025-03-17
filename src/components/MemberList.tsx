@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { Member } from "../types/Member";
 import { useNavigate } from "react-router-dom";
-import { Button, Card, Flex, Text, View } from "@aws-amplify/ui-react";
+import { Button, Flex, View } from "@aws-amplify/ui-react";
+import MemberCard from "./MemberCard";
+import ErrorCard from "./ErrorCard";
 
 const MemberList = () => {
   // useStateでユーザー情報を保存するための状態を作成
   const [MemberList, setMemberList] = useState([]);
+  const [errorState, setErrorState] = useState<unknown>(null);
   const idToken = sessionStorage.idToken.toString();
 
   useEffect(() => {
@@ -27,7 +30,7 @@ const MemberList = () => {
         const data = await response.json();
         setMemberList(data);
       } catch (err) {
-        console.error(err);
+        setErrorState(err);
       }
     };
 
@@ -39,6 +42,14 @@ const MemberList = () => {
   const handleLogout = () => {
     sessionStorage.clear();
     navigate("/login");
+  };
+
+  const sampleMember: Member = {
+    id: 0,
+    name: "Sample",
+    role: "Basic",
+    email: "sample@test.com",
+    image_url: "",
   };
 
   return (
@@ -54,17 +65,14 @@ const MemberList = () => {
       >
         {MemberList &&
           MemberList.map((m: Member) => {
-            return (
-              <View padding="0.7rem">
-                <Card variation="outlined">
-                  <View padding="0.5rem" width="240px">
-                    <Text>{m.name}</Text>
-                    <Text>{m.email}</Text>
-                  </View>
-                </Card>
-              </View>
-            );
+            return <MemberCard member={m} />;
           })}
+        {errorState != null && (
+          <View>
+            <ErrorCard errorMessage={errorState.toString()} />
+            <MemberCard member={sampleMember} />
+          </View>
+        )}
       </Flex>
       <Button
         variation="primary"
